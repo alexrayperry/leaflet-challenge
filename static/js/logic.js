@@ -58,15 +58,6 @@ d3.json(queryUrl, function(data) {
     
   });
 
-//   var geojsonMarkerOptions = {
-//     radius: markerSize,
-//     fillColor: "#0163FF",
-//     color: "#000000",
-//     weight: 3,
-//     fillOpacity: 0.5
-// };
-
-
   
  function createFeatures(earthquakeData) {
 
@@ -123,8 +114,29 @@ function createMap(earthquakes) {
           layers: [lightmap, earthquakes]
         });
       
-    L.control.layers(baseMaps, overlayMaps, {
-        collapsed: false
-        }).addTo(myMap);
+    // L.control.layers(baseMaps, overlayMaps, {
+    //     collapsed: false
+    //     }).addTo(myMap);
+
+  // Set up the legend
+  var legend = L.control({ position: "bottomleft" });
+  
+  legend.onAdd = function() {
+    var div = L.DomUtil.create("div", "info legend");
+    var magScale = [0, 1, 2, 3, 4, 5]
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < magScale.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + markerColor(magScale[i]) + '"></i> ' +
+            magScale[i] + (magScale[i + 1] ? '&ndash;' + magScale[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+
+  // Adding legend to the map
+  legend.addTo(myMap);
+
     }
         
