@@ -1,6 +1,53 @@
-// USGS Magnitude 1.0+ Earthquakes, Past Week
+// USGS Magnitude Earthquakes, Past Week
 
-var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_week.geojson"
+var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+
+// function markerSize(magnitude) {
+//     return magnitude
+// }
+
+function markerSize(magnitude) {
+    if (magnitude < 1) {
+        return 3;
+    }
+    else if (magnitude < 2) {
+       return 13;
+    }
+    else if (magnitude < 3) {
+        return 23;
+    }
+    else if (magnitude < 4) {
+        return 33;
+    }
+    else if (magnitude < 5) {
+        return 43;
+    }
+    else {
+        return 55;
+    }
+}
+
+function markerColor(magnitude) {
+    if (magnitude < 1) {
+        return "#7FFF00";
+    }
+    else if (magnitude < 2) {
+       return "#ADFF2F";
+    }
+    else if (magnitude < 3) {
+        return "#FFD700";
+    }
+    else if (magnitude < 4) {
+        return "#FFA500";
+    }
+    else if (magnitude < 5) {
+        return "#FF8C00";
+    }
+    else {
+        return "#FF4500";
+    }
+}
+
 
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
@@ -10,18 +57,42 @@ d3.json(queryUrl, function(data) {
     createFeatures(data.features);
     
   });
+
+//   var geojsonMarkerOptions = {
+//     radius: markerSize,
+//     fillColor: "#0163FF",
+//     color: "#000000",
+//     weight: 3,
+//     fillOpacity: 0.5
+// };
+
+
   
-  function createFeatures(earthquakeData) {
+ function createFeatures(earthquakeData) {
 
     function onEachFeature(feature, layer) {
-    layer.bindPopup("<h3>" + feature.properties.place +
+    layer.bindPopup("<h3>" + feature.properties.title +
     "</h3><hr><p>" + new Date(feature.properties.time) + "<p>");
-
   }
 
+
+    function pointToLayer (feature, latlng) {
+    return new L.CircleMarker(latlng, {
+    radius: markerSize(feature.properties.mag),
+    fillColor: markerColor(feature.properties.mag),
+    color: "#000000",
+    weight: 1,
+    fillOpacity: 1
+});
+    }
+
+
   var earthquakes = L.geoJSON(earthquakeData, {
-      onEachFeature: onEachFeature
-  });
+      onEachFeature: onEachFeature,
+      pointToLayer: pointToLayer,
+      });
+
+
  
   createMap(earthquakes);
 
@@ -29,15 +100,15 @@ d3.json(queryUrl, function(data) {
 
 function createMap(earthquakes) {
 
-    var streetmap = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    var lightmap = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
-        id: 'mapbox/streets-v11',
+        id: 'mapbox/light-v10',
         accessToken: "pk.eyJ1IjoiYWx4cHJ5IiwiYSI6ImNrYW9saHZjNDA0Z3ozMG82cHZpcm0xbm8ifQ.yM3ZhZhGelQpcJBz0wtaiw"
     });
 
     var baseMaps = {
-        "Street Map": streetmap
+        "Light Map": lightmap
     };
 
     var overlayMaps = {
@@ -46,10 +117,10 @@ function createMap(earthquakes) {
 
     var myMap = L.map("map", {
         center:[
-            40.09, -95.71
+            40.09, -110.71
           ],
           zoom: 5,
-          layers: [streetmap, earthquakes]
+          layers: [lightmap, earthquakes]
         });
       
     L.control.layers(baseMaps, overlayMaps, {
