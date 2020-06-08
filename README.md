@@ -2,11 +2,11 @@
 
 ## Background
 
-The United States Geological Survey ("USGS") is responsible for providing scientific data about natural hazards, the health of our ecosystems and environment; and the impacts of climate and land-use change. In this project, I utilize javascript, d3, and leaflet to connect to the USGS's API to retreive geoJSON data and visualize the data, providing the user with a functional webpage that is user-drive. 
+The United States Geological Survey ("USGS") is responsible for providing scientific data about natural hazards, the health of our ecosystems and environment; and the impacts of climate and land-use change. In this project, I utilize javascript, d3, and leaflet to connect to the USGS's API to retreive geoJSON data and visualize the data, providing the user with a functional webpage that is user-driven. 
 
 ### Level 1: Basic Visualization
 
-Using leaflet I have created a grayscale map that plots all of the earthquakes recorded with the USGS in the last week. The data markers refelct the magnitude of the earthquake in their size and color. Earthquakes with higher magnitude are larger and darker in color. Each marker can be clicked on which will initiae a popup that provides additional information about the earthquake. 
+Using leaflet I have created a grayscale map that plots all of the earthquakes recorded with the USGS in the last week. The data markers refelct the magnitude of the earthquake in their size and color. Earthquakes with higher magnitude are larger and darker in color. Each marker can be clicked on which will initiate a popup that provides additional information about the earthquake. A legend on the bottom left of the screen also provides the user a reference as to magnitude each color represents. 
 
 ![map1](images/regular-map.png)
 
