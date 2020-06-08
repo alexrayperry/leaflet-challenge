@@ -2,9 +2,7 @@
 
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
-// function markerSize(magnitude) {
-//     return magnitude
-// }
+// Function to set marker sizes relative to magnitude
 
 function markerSize(magnitude) {
     if (magnitude < 1) {
@@ -26,6 +24,8 @@ function markerSize(magnitude) {
         return 55;
     }
 }
+
+// Function to set marker color relative to magnitude
 
 function markerColor(magnitude) {
     if (magnitude < 1) {
@@ -49,24 +49,26 @@ function markerColor(magnitude) {
 }
 
 
-// Perform a GET request to the query URL
+// Read in the API data
 d3.json(queryUrl, function(data) {
     console.log(data);
 
-    // Once we get a response, send the data.features object to the createFeatures function
+    // Pass the data to createfeatures function
     createFeatures(data.features);
     
   });
 
+// Run createfeature function to create markers
   
  function createFeatures(earthquakeData) {
 
+    // function to create popup providing earthquake info
     function onEachFeature(feature, layer) {
     layer.bindPopup("<h3>" + feature.properties.title +
     "</h3><hr><p>" + new Date(feature.properties.time) + "<p>");
   }
 
-
+    // function to create markers 
     function pointToLayer (feature, latlng) {
     return new L.CircleMarker(latlng, {
     radius: markerSize(feature.properties.mag),
@@ -77,14 +79,14 @@ d3.json(queryUrl, function(data) {
 });
     }
 
-
+// Create GeoJSon layer containing the features on the earthquake data
   var earthquakes = L.geoJSON(earthquakeData, {
       onEachFeature: onEachFeature,
       pointToLayer: pointToLayer,
       });
 
 
- 
+ // send layer to createmap funtion
   createMap(earthquakes);
 
 }
@@ -114,9 +116,9 @@ function createMap(earthquakes) {
           layers: [lightmap, earthquakes]
         });
       
-    // L.control.layers(baseMaps, overlayMaps, {
-    //     collapsed: false
-    //     }).addTo(myMap);
+    L.control.layers(baseMaps, overlayMaps, {
+        collapsed: false
+        }).addTo(myMap);
 
   // Set up the legend
   var legend = L.control({ position: "bottomleft" });
